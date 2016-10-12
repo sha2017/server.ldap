@@ -1,0 +1,12 @@
+---
+# handlers file for ldap-server
+
+
+- name: stop slapd
+  action: service name=slapd state=stopped enabled=yes
+
+- name: restart slapd
+  action: service name=slapd state=restarted enabled=yes
+
+- name: start slapd
+  action: service name=slapd state=started enabled=yes

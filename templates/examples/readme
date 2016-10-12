@@ -1,0 +1,9 @@
+Use "replace" or "add". "add" for empty configuration and "replace" for update existing configuration
+
+olcServerID must be different on each server
+
+don't write ldif on windows if you want to run them on linux...
+
+slaptest to check configuration
+slapcat -b "cn=config" to dump cn=config
+

@@ -1,0 +1,4 @@
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcSyncRepl
+olcSyncRepl: rid=101 provider={{openldap_.uri }} binddn="cn=admin,{{ openldap_.domain_base }}" bindmethod=simple credentials={{openldap_.rootpw }} searchbase="{{ openldap_.domain_base }}" type=refreshAndPersist interval=00:00:00:10 retry="5 5 300 5" timeout=1

@@ -1,0 +1,129 @@
+---
+    - apt: update_cache=yes cache_valid_time=3600
+
+    - name: debconf for slapd organization
+      action: debconf name=slapd
+          question='shared/organization'
+          value='{{ openldap_.domain_name }}'
+          vtype='string'
+
+    - name: debconf for slapd domain
+      action: debconf
+          name=slapd
+          question='slapd/domain'
+          value='{{ openldap_.domain_name }}'
+          vtype='string'
+
+    - name: debconf for slapd password1
+      action: debconf
+          name=slapd
+          question='slapd/password1'
+          value='{{ openldap_.rootpw }}'
+          vtype='password'
+
+    - name: debconf for slapd password2
+      action: debconf
+         name=slapd
+         question='slapd/password2'
+         value='{{ openldap_.rootpw }}'
+         vtype='password'
+
+    - name: debconf for slapd move_old_database
+      action: debconf
+          name=slapd
+          question='slapd/move_old_database'
+          value='true'
+          vtype='boolean'
+
+    - name: debconf for slapd backend
+      action: debconf
+          name=slapd
+          question='slapd/backend'
+          value='HDB'
+          vtype='select'
+
+    - name: Installing packages 
+      action: apt name={{ item }}  state='present'
+      with_items:
+        - slapd
+        - ldap-utils
+        - ldapvi
+
+    - name: Have we configured slapd before?
+      action: shell [ -f $ldap_slapd_dpkg_reconfigure_done ] && echo 'found' || echo ''
+      register: ldap_slapd_already_configured
+
+    - name: Create password for read user
+      action: shell slappasswd -h {SSHA} -s {{ openldap_.user_read_password }}
+      register: openldap_user_readpw
+
+
+    - name: Remove nis schema
+      action: file path="/etc/ldap/slapd.d/cn=config/cn=schema/cn={2}nis.ldif" state=absent
+      notify: restart slapd
+
+    - name: Create templates 
+      action: copy src=server.ldap/files/etc/ldap/slapd.d/cn=config/cn=schema/{{ item }}  dest=/etc/ldap/slapd.d/cn=config/cn=schema/{{ item }} owner=openldap group=openldap mode=0770
+      notify: restart slapd
+      with_items:
+        - "cn={0}core.ldif"
+        - "cn={1}cosine.ldif"
+        - "cn={2}rfc2307bis.ldif"
+        - "cn={4}samba.ldif"
+        - "cn={5}google-authenticator.ldif"
+        - "cn={6}qmail.ldif"
+        - "cn={7}pwm.ldif"
+
+    - name: template ldap.conf
+      action: template
+          src='server.ldap/templates/etc/{{ item }}'
+          dest='/etc/{{ item }}'
+      with_items:
+        - "ldap/ldap.conf"
+        - "default/slapd"
+      notify: restart slapd
+    
+    - name: Creates directory
+      file: path=/root/{{ item }} state=directory
+      with_items:
+        - "ldap-examples"
+        - "ldap-examples/1_setup-basic-domain"
+        - "ldap-examples/2_configure-replication-cn-config"
+        - "ldap-examples/3_configure-replication-hdb"
+        - "ldap-examples/schemas"
+      when: openldap_.examples == True 
+
+
+    - name: template examples
+      action: template
+          src='server.ldap/templates/examples/{{ item }}'
+          dest='/root/ldap-examples/{{ item }}'
+      with_items:
+        - "readme"
+        - "1_setup-basic-domain/1_basic_setup.ldif"
+        - "1_setup-basic-domain/2_disable_anon_bind.ldif"
+        - "1_setup-basic-domain/3_sambadomain.ldif"
+        - "1_setup-basic-domain/4_set_ssl_cert.ldif"
+        - "2_configure-replication-cn-config/1_loadSyncProvModule.ldif"
+        - "2_configure-replication-cn-config/2_setServerID.ldif"
+        - "2_configure-replication-cn-config/3_setConfigPW.ldif"
+        - "2_configure-replication-cn-config/4_addConfigReplication.ldif"
+        - "2_configure-replication-cn-config/5_addSyncProv.ldif"
+        - "2_configure-replication-cn-config/6_addSyncRepl.ldif"
+        - "2_configure-replication-cn-config/7_testConfigReplication.ldif"
+        - "3_configure-replication-hdb/1_addSyncProvToHDB.ldif"
+        - "3_configure-replication-hdb/2_addOlcSuffix.ldif"
+        - "3_configure-replication-hdb/3_addOlcRootDN.ldif"
+        - "3_configure-replication-hdb/4_addolcRootPW.ldif"
+        - "3_configure-replication-hdb/5_addOlcSyncRepl.ldif"
+        - "3_configure-replication-hdb/6_addOlcMirrorMode.ldif"
+        - "3_configure-replication-hdb/7_addIndexHDB.ldif"
+        - "schemas/rfc2307bis.ldif"
+        - "schemas/samba.ldif"
+        - "schemas/google-authenticator.ldif"
+        - "schemas/qmail.ldif"
+        - "schemas/pwm.ldif"
+      when: openldap_.examples == True 
+
+
+

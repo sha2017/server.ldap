@@ -1,0 +1,5 @@
+dn: cn=config
+changetype: modify
+replace: olcServerID
+olcServerID: 1 {{ openldap_.uri }} 
+olcServerID: 3 ldap://ldapTest.gremaud.test

@@ -1,0 +1,58 @@
+dn: cn=read,{{ openldap_.domain_base }}
+cn: read
+description: LDAP Read user 
+objectclass: simpleSecurityObject
+objectclass: organizationalRole
+userpassword: {{ openldap_user_readpw.stdout }} 
+
+dn: ou=people,{{ openldap_.domain_base }}
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=systems,{{ openldap_.domain_base }}
+objectclass: organizationalUnit
+ou: systems
+
+dn: ou=groups,{{ openldap_.domain_base }}
+objectclass: organizationalUnit
+ou: groups
+
+dn: cn=admins,ou=groups,{{ openldap_.domain_base }}
+cn: Administrators
+gidnumber: 20000
+member: cn=admin,{{ openldap_.domain_base }}
+objectclass: top
+objectclass: posixGroup
+objectclass: groupOfNames
+objectclass: sambaGroupMapping
+sambagrouptype: 2
+sambasid: {{ openldap_.samba_sid }} 
+
+dn: cn=members,ou=groups,{{ openldap_.domain_base }}
+cn: Space members
+gidnumber: 20001
+member: cn=Test test,ou=people,{{ openldap_.domain_base }}
+objectclass: top
+objectclass: posixGroup
+objectclass: groupOfNames
+objectclass: sambaGroupMapping
+sambagrouptype: 2
+sambasid: {{ openldap_.samba_sid }}
+
+dn: cn=Test test,ou=people,{{ openldap_.domain_base }}
+cn: Test test
+gidnumber: 20001
+givenname: Test
+homedirectory: /home/test
+loginshell: /bin/sh
+objectclass: inetOrgPerson
+objectclass: sambaSamAccount
+objectclass: posixAccount
+objectclass: top
+sambaacctflags: [U]
+sambantpassword: 556A8F7773E850D4CF4D789D39DDACA0
+sambasid: {{ openldap_.samba_sid }} 
+sn: test
+uid: test
+uidnumber: 20001
+userpassword: {MD5}316imSTTnDvoeFc08TFpxg== 

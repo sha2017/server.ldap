@@ -1,0 +1,8 @@
+dn: cn={2}nis,cn=schema,cn=config
+changetype: modify
+delete: olcObjectClasses
+olcObjectClasses: ( 1.3.6.1.1.1.2.2 NAME 'posixGroup' DESC 'Abstraction of a group of accounts' SUP top STRUCTURAL MUST ( cn $ gidNumber ) MAY ( userPassword $ memberUid $ description ) )
+-
+add: olcObjectClasses
+olcObjectClasses: {2}( 1.3.6.1.1.1.2.2 NAME 'posixGroup' DESC 'Abstraction of a group of accounts' SUP top AUXILIARY MUST ( cn $ gidNumber ) MAY ( userPassword $ memberUid $ description ) )
+

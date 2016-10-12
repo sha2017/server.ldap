@@ -1,0 +1,22 @@
+dn: sambaDomainName={{ openldap_.domain_name.split('.')[0].upper() }}
+sambaDomainName: {{ openldap_.domain_name.split('.')[0].upper() }}
+sambaSID: {{ openldap_.samba_sid }}
+sambaAlgorithmicRidBase: 1000
+objectClass: sambaDomain
+sambaMinPwdAge: 0
+sambaMinPwdLength: 5
+sambaLogonToChgPwd: 0
+sambaForceLogoff: -1
+sambaRefuseMachinePwdChange: 0
+sambaLockoutThreshold: 0
+sambaMaxPwdAge: -1
+sambaNextRid: 20100
+sambaPwdHistoryLength: 0
+
+dn: cn=NextFreeUnixId,{{ openldap_.domain_base }}
+objectClass: inetOrgPerson
+objectClass: sambaUnixIdPool
+cn: NextFreeUnixId
+sn: NextFreeUnixId
+gidNumber: 10000
+uidNumber: 10000

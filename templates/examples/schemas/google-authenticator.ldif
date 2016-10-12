@@ -1,0 +1,6 @@
+dn: cn=google-authenticator,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: google-authenticator
+olcAttributeTypes: ( 1.3.6.1.4.1.33578.1.1.4.1 NAME 'AuthLabel' DESC 'Label for authenticator entry' EQUALITY caseExactMatch ORDERING caseExactOrderingMatch SUBSTR caseExactSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.44 )
+olcAttributeTypes: ( 1.3.6.1.4.1.33578.1.1.4.2 NAME 'AuthSecret' DESC 'Authenticator shared secret' EQUALITY octetStringMatch ORDERING octetStringOrderingMatch SUBSTR octetStringSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE )
+olcObjectClasses: ( 1.3.6.1.4.1.33578.1.1.4.2.1 NAME 'AuthOTP' DESC 'Base class for authenticator configurations' SUP top AUXILIARY MUST ( AuthLabel $ AuthSecret ) )
