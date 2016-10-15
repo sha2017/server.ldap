@@ -59,7 +59,7 @@
 
 
     - name: Remove nis schema
-      action: file path="/etc/ldap/slapd.d/cn=config/cn=schema/cn={2}nis.ldif" state=absent
+      action: file path="etc/ldap/slapd.d/cn=config/cn=schema/cn={2}nis.ldif" state=absent
       notify: restart slapd
 
     - name: Create templates 
