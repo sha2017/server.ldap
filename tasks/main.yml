@@ -63,7 +63,7 @@
       notify: restart slapd
 
     - name: Create templates 
-      action: copy src=server.ldap/files/etc/ldap/slapd.d/cn=config/cn=schema/{{ item }}  dest=/etc/ldap/slapd.d/cn=config/cn=schema/{{ item }} owner=openldap group=openldap mode=0770
+      action: copy src=etc/ldap/slapd.d/cn=config/cn=schema/{{ item }}  dest=/etc/ldap/slapd.d/cn=config/cn=schema/{{ item }} owner=openldap group=openldap mode=0770
       notify: restart slapd
       with_items:
         - "cn={0}core.ldif"
@@ -76,7 +76,7 @@
 
     - name: template ldap.conf
       action: template
-          src='server.ldap/templates/etc/{{ item }}'
+          src='etc/{{ item }}'
           dest='/etc/{{ item }}'
       with_items:
         - "ldap/ldap.conf"
@@ -96,7 +96,7 @@
 
     - name: template examples
       action: template
-          src='server.ldap/templates/examples/{{ item }}'
+          src='examples/{{ item }}'
           dest='/root/ldap-examples/{{ item }}'
       with_items:
         - "readme"

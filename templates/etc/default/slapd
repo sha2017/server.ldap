@@ -21,10 +21,10 @@ SLAPD_PIDFILE=
 # sockets.
 # Example usage:
 # SLAPD_SERVICES="ldap://127.0.0.1:389/ ldaps:/// ldapi:///"
-{% if openldap_.ssl == True %}
+{% if openldap_.ssl == true %}
 SLAPD_SERVICES="ldap://127.0.0.1:389/ ldapi:/// ldaps:///"
 {% endif %}
-{% if openldap_.ssl == False %}
+{% if openldap_.ssl == false %}
 SLAPD_SERVICES="ldap:/// ldapi:///"
 {% endif %}
 
